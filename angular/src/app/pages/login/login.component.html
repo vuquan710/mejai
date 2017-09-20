@@ -1,0 +1,12 @@
+<form (ngSubmit)="login()" #registerForm="ngForm">
+  <div class="container">
+    <label><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="username" id="email" [(ngModel)]="registerCredentials.email"  required>
+
+    <label><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password" id="password"  [(ngModel)]="registerCredentials.password" required>
+
+    <button type="submit" [disabled]="!registerForm.form.valid" >Login</button>
+  </div>
+</form>
+
