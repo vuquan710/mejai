@@ -1,14 +1,31 @@
 var jwt = require('jsonwebtoken');
-var configs = require('../config');
-
+var bcrypt = require('bcrypt');
+var Promise = require('promise');
 module.exports = {
-  authentication : function(req , res , next){
-    jwt.verify(req.body.token, configs.jwtKey, function(err, decoded){
-      if (err) res.json({status : false , message : err.message});
-      else {
-        req.user = decoded.data;
-        next();
-      }
+  cryptPassword : function(password) {
+    return new Promise (function (resolve, reject) {
+      bcrypt.genSalt(10, function(err, salt) {
+        if (err) 
+          reject(err);
+        bcrypt.hash(password, salt, function(err, hash) {
+          if(err) {
+            reject(err);
+          }else {
+            resolve(hash);
+          }
+        });
+      });
+    });
+  },
+  comparePassword : function(plainPass, hashword) {
+    return new Promise (function (resolve, reject) {
+      bcrypt.compare (plainPass, hashword, function (err, isPasswordMatch){
+        if(err){
+          reject(err);
+        }else {
+          resolve(isPasswordMatch);
+        }
+      })
     })
   }
 }
